@@ -1,0 +1,188 @@
+diff -u squashfs4.2/squashfs-tools/mksquashfs.c squashfs4.2_fix/squashfs-tools/mksquashfs.c
+--- squashfs4.2/squashfs-tools/mksquashfs.c	2011-02-28 23:24:10.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/mksquashfs.c	2013-09-16 00:32:22.115362300 +0200
+@@ -25,6 +25,11 @@
+ #define FALSE 0
+ #define TRUE 1
+ 
++#ifdef __CYGWIN__
++#include <sys/termios.h>
++#define FNM_EXTMATCH  (1 << 5)
++#endif
++
+ #include <pwd.h>
+ #include <grp.h>
+ #include <time.h>
+@@ -51,10 +56,12 @@
+ #include <sys/wait.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
+ #include <sys/sysctl.h>
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #include <sys/sysinfo.h>
+@@ -137,7 +144,7 @@
+ int block_size = SQUASHFS_FILE_SIZE, block_log;
+ unsigned int id_count = 0;
+ int file_count = 0, sym_count = 0, dev_count = 0, dir_count = 0, fifo_count = 0,
+-	sock_count = 0;
++	sock_count = 0, exec_count = 0;
+ 
+ /* write position within data section */
+ long long bytes = 0, total_bytes = 0;
+@@ -1196,6 +1203,41 @@
+ }
+ 
+ 
++#ifdef __CYGWIN__
++int is_file_executable(char *filename)
++{
++	char header_elf[] = {0x7F, 'E', 'L', 'F'};
++	char header_sh[] = {'#', '!'};
++	int ret = FALSE;
++
++	FILE* f = fopen(filename, "rb");
++	if (f == NULL)
++		return FALSE;
++
++	char* buf = malloc(4 * sizeof(char));
++	if (buf == NULL)
++	{
++		fclose(f);
++		return FALSE;
++	}
++
++	if (fread(buf, 1, 4, f) != 4)
++	{
++		fclose(f);
++		free(buf);
++		return FALSE;
++	}
++
++	fclose(f);
++
++	ret = (memcmp(buf, header_elf, 4) == 0 || memcmp(buf, header_sh, 2) == 0);
++
++	free(buf);
++	return ret;
++}
++#endif
++
++
+ int create_inode(squashfs_inode *i_no, struct dir_info *dir_info,
+ 	struct dir_ent *dir_ent, int type, long long byte_size,
+ 	long long start_block, unsigned int offset, unsigned int *block_list,
+@@ -1246,6 +1288,15 @@
+ 		break;
+ 	}
+ 			
++#ifdef __CYGWIN__
++	if(type == SQUASHFS_FILE_TYPE) {
++		if(is_file_executable(filename)) {
++			exec_count++;
++			buf->st_mode = buf->st_mode | S_IRWXU | S_IRGRP | S_IXUSR | S_IROTH | S_IXOTH;
++		}
++	}
++#endif
++	//printf("FILE=%s, MODE=0x%x, TYPE=%d\n", filename, buf->st_mode, type);
+ 	base->mode = SQUASHFS_MODE(buf->st_mode);
+ 	base->uid = get_uid((unsigned int) global_uid == -1 ?
+ 		buf->st_uid : global_uid);
+@@ -4062,6 +4113,10 @@
+ 
+ 	signal(SIGUSR1, sigusr1_handler);
+ 
++#ifdef __CYGWIN__
++	processors = atoi(getenv("NUMBER_OF_PROCESSORS"));
++#else
++
+ 	if(processors == -1) {
+ #ifndef linux
+ 		int mib[2];
+@@ -4083,6 +4138,7 @@
+ 		processors = sysconf(_SC_NPROCESSORS_ONLN);
+ #endif
+ 	}
++#endif /* __CYGWIN__ */
+ 
+ 	thread = malloc((2 + processors * 2) * sizeof(pthread_t));
+ 	if(thread == NULL)
+@@ -5392,6 +5448,9 @@
+ 		printf("No duplicate files removed\n");
+ 	printf("Number of inodes %d\n", inode_count);
+ 	printf("Number of files %d\n", file_count);
++#ifdef __CYGWIN__
++	printf("Number of executables %d\n", exec_count);
++#endif
+ 	if(!no_fragments)
+ 		printf("Number of fragments %d\n", fragments);
+ 	printf("Number of symbolic links  %d\n", sym_count);
+diff -u squashfs4.2/squashfs-tools/read_fs.c squashfs4.2_fix/squashfs-tools/read_fs.c
+--- squashfs4.2/squashfs-tools/read_fs.c	2011-02-11 16:49:24.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/read_fs.c	2012-10-25 16:39:51.971062000 +0200
+@@ -33,9 +33,11 @@
+ #include <sys/mman.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #endif
+diff -u squashfs4.2/squashfs-tools/unsquashfs.c squashfs4.2_fix/squashfs-tools/unsquashfs.c
+--- squashfs4.2/squashfs-tools/unsquashfs.c	2011-02-28 23:27:06.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/unsquashfs.c	2012-10-25 16:44:41.610628400 +0200
+@@ -32,6 +32,11 @@
+ #include <sys/sysinfo.h>
+ #include <sys/types.h>
+ 
++#ifdef __CYGWIN__
++#include <sys/termios.h>
++#define FNM_EXTMATCH  (1 << 5)
++#endif
++
+ struct cache *fragment_cache, *data_cache;
+ struct queue *to_reader, *to_deflate, *to_writer, *from_writer;
+ pthread_t *thread, *deflator_thread;
+@@ -1809,6 +1814,10 @@
+ 		EXIT_UNSQUASH("Failed to set signal mask in intialise_threads"
+ 			"\n");
+ 
++#ifdef __CYGWIN__
++	    processors = atoi(getenv("NUMBER_OF_PROCESSORS"));
++#else /* __CYGWIN__ */
++
+ 	if(processors == -1) {
+ #ifndef linux
+ 		int mib[2];
+@@ -1830,6 +1839,7 @@
+ 		processors = sysconf(_SC_NPROCESSORS_ONLN);
+ #endif
+ 	}
++#endif /* __CYGWIN__ */
+ 
+ 	thread = malloc((3 + processors) * sizeof(pthread_t));
+ 	if(thread == NULL)
+diff -u squashfs4.2/squashfs-tools/unsquashfs.h squashfs4.2_fix/squashfs-tools/unsquashfs.h
+--- squashfs4.2/squashfs-tools/unsquashfs.h	2011-02-11 16:49:24.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/unsquashfs.h	2012-10-25 16:41:40.678279700 +0200
+@@ -46,9 +46,11 @@
+ #include <sys/time.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #endif

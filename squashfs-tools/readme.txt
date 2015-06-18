@@ -1,0 +1,1 @@
+The patch files should be applied to squashfs-tools 4.2

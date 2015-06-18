@@ -1,0 +1,2 @@
+squashfs-tools-special is a modified squashfs-tools distribution which makes
+mksquashfs automatically detect executables and set the executable flag if so.

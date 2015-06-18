@@ -1,0 +1,111 @@
+diff -u squashfs4.2/squashfs-tools/mksquashfs.c squashfs4.2_fix/squashfs-tools/mksquashfs.c
+--- squashfs4.2/squashfs-tools/mksquashfs.c	2011-02-28 23:24:10.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/mksquashfs.c	2013-09-16 02:12:49.065084100 +0200
+@@ -25,6 +25,11 @@
+ #define FALSE 0
+ #define TRUE 1
+ 
++#ifdef __CYGWIN__
++#include <sys/termios.h>
++#define FNM_EXTMATCH  (1 << 5)
++#endif
++
+ #include <pwd.h>
+ #include <grp.h>
+ #include <time.h>
+@@ -51,10 +56,12 @@
+ #include <sys/wait.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
+ #include <sys/sysctl.h>
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #include <sys/sysinfo.h>
+@@ -4062,6 +4069,10 @@
+ 
+ 	signal(SIGUSR1, sigusr1_handler);
+ 
++#ifdef __CYGWIN__
++	processors = atoi(getenv("NUMBER_OF_PROCESSORS"));
++#else
++
+ 	if(processors == -1) {
+ #ifndef linux
+ 		int mib[2];
+@@ -4083,6 +4094,7 @@
+ 		processors = sysconf(_SC_NPROCESSORS_ONLN);
+ #endif
+ 	}
++#endif /* __CYGWIN__ */
+ 
+ 	thread = malloc((2 + processors * 2) * sizeof(pthread_t));
+ 	if(thread == NULL)
+diff -u squashfs4.2/squashfs-tools/read_fs.c squashfs4.2_fix/squashfs-tools/read_fs.c
+--- squashfs4.2/squashfs-tools/read_fs.c	2011-02-11 16:49:24.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/read_fs.c	2012-10-25 16:39:51.971062000 +0200
+@@ -33,9 +33,11 @@
+ #include <sys/mman.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #endif
+diff -u squashfs4.2/squashfs-tools/unsquashfs.c squashfs4.2_fix/squashfs-tools/unsquashfs.c
+--- squashfs4.2/squashfs-tools/unsquashfs.c	2011-02-28 23:27:06.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/unsquashfs.c	2012-10-25 16:44:41.610628400 +0200
+@@ -32,6 +32,11 @@
+ #include <sys/sysinfo.h>
+ #include <sys/types.h>
+ 
++#ifdef __CYGWIN__
++#include <sys/termios.h>
++#define FNM_EXTMATCH  (1 << 5)
++#endif
++
+ struct cache *fragment_cache, *data_cache;
+ struct queue *to_reader, *to_deflate, *to_writer, *from_writer;
+ pthread_t *thread, *deflator_thread;
+@@ -1809,6 +1814,10 @@
+ 		EXIT_UNSQUASH("Failed to set signal mask in intialise_threads"
+ 			"\n");
+ 
++#ifdef __CYGWIN__
++	    processors = atoi(getenv("NUMBER_OF_PROCESSORS"));
++#else /* __CYGWIN__ */
++
+ 	if(processors == -1) {
+ #ifndef linux
+ 		int mib[2];
+@@ -1830,6 +1839,7 @@
+ 		processors = sysconf(_SC_NPROCESSORS_ONLN);
+ #endif
+ 	}
++#endif /* __CYGWIN__ */
+ 
+ 	thread = malloc((3 + processors) * sizeof(pthread_t));
+ 	if(thread == NULL)
+diff -u squashfs4.2/squashfs-tools/unsquashfs.h squashfs4.2_fix/squashfs-tools/unsquashfs.h
+--- squashfs4.2/squashfs-tools/unsquashfs.h	2011-02-11 16:49:24.000000000 +0100
++++ squashfs4.2_fix/squashfs-tools/unsquashfs.h	2012-10-25 16:41:40.678279700 +0200
+@@ -46,9 +46,11 @@
+ #include <sys/time.h>
+ 
+ #ifndef linux
++#ifndef __CYGWIN__
+ #define __BYTE_ORDER BYTE_ORDER
+ #define __BIG_ENDIAN BIG_ENDIAN
+ #define __LITTLE_ENDIAN LITTLE_ENDIAN
++#endif /* __CYGWIN__ */
+ #else
+ #include <endian.h>
+ #endif

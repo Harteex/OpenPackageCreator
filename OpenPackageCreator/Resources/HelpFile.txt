@@ -1,0 +1,37 @@
+Open Package Creator
+====================
+
+
+*** What it does ***
+
+The application generates .desktop meta data files out of the information filled in the fields, and proceeds to pack the specified directory into an OPK file.
+To make things easier for the user, the application does a number of adjustments and checks:
+- Auto adjustment of the entered data to conform to the .desktop file specifications, for example trailing ; for categories
+- Automatically sets the required executable flags on executables
+- Checks executable scripts for line ending problems
+
+
+*** Information about fields ***
+
+Information for the fields can be obtained by hovering over the blue info icon next to each field.
+
+
+*** Launch application with file ***
+
+If you want to enable functionality in the menu to directly select a file and launch the application with that file, check the Launch Executable With File checkbox and enter the desired Mime types. An example of such usage would be an emulator that you can start directly with a rom file.
+By default it will launch the executable or command entered in the Executable field, followed by the file.
+
+However, this may be customized. If you enter %f anywhere in the Executable field, it will be replaced with the chosen file.
+For example: myapp.dge -file %f -otherarg 4
+
+
+*** Development ***
+
+If you found any bugs or have any suggestions for future versions, the easiest way is to post about it on the Dingoonity forums.
+
+
+*** Links ***
+
+http://www.harteex.com/?page=openpackagecreator
+http://www.gcw-zero.com
+http://dingoonity.org
