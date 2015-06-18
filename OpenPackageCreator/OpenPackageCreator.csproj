@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\HelpFile.txt" />
+    <Content Include="changelog.txt" />
     <Content Include="Resources\aboutimage.png" />
     <Content Include="Resources\info.png" />
     <Content Include="Resources\odlogo.ico" />

@@ -1,0 +1,16 @@
+Change log 1.1.1
+* Added support for the new X-OD-NeedsJoystick option
+
+Change log 1.1
+* Made a better list of default mime types, based on the actual mime types used in OD
+* Icons and executables in sub directories now work
+* Existing .desktop files are now handled, the user may either:
+  - Ignore and overwrite the existing .desktop files (as it worked previously)
+  - Load information from the existing .desktop files
+  - Skip the .desktop file generation and use the existing files as-is
+* Better handling of launching with a file: %f won't get appended to exec if it already contains it
+* Improved the detection of executables in squashfs-tools
+* If executable is a script and Windows line endings are found, the user may chose to convert the script to Unix line endings
+* Help directly in the application; info icons which popups information about each field on hover
+* Fields for Terminal and Manual are now available
+* Various other fixes
