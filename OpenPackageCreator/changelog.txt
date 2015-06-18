@@ -1,7 +1,11 @@
-Change log 1.1.1
+1.1.2
+* Added support for X-OD-NeedsGSensor and X-OD-NeedsDownscaling
+* Fixed a bug with using desktop files as is and then trying to pack
+
+1.1.1
 * Added support for the new X-OD-NeedsJoystick option
 
-Change log 1.1
+1.1
 * Made a better list of default mime types, based on the actual mime types used in OD
 * Icons and executables in sub directories now work
 * Existing .desktop files are now handled, the user may either:
