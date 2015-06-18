@@ -354,8 +354,19 @@ namespace OpenPackageCreator
 
                 if (desktopFileGCW0 != null)
                 {
+                    string execPath = Path.Combine(new string[] { curPath, desktopFileGCW0.Exec });
+                    bool exeExists = File.Exists(execPath);
+                    if (!exeExists)
+                    {
+                        DialogResult exeResult = MessageBox.Show("Executable can not be found - Continue anyway?", "Executable not found", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (exeResult != System.Windows.Forms.DialogResult.Yes)
+                            return;
+                    }
+                    
                     desktopFileGCW0.WriteDesktopFile(curPath);
-                    VerifyAndFixLineEndingsIfScript(Path.Combine(new string[] { curPath, desktopFileGCW0.Exec }));
+
+                    if (exeExists)
+                        VerifyAndFixLineEndingsIfScript(execPath);
                 }
                 else
                 {
@@ -368,8 +379,19 @@ namespace OpenPackageCreator
 
                 if (desktopFileA320 != null)
                 {
+                    string execPath = Path.Combine(new string[] { curPath, desktopFileA320.Exec });
+                    bool exeExists = File.Exists(execPath);
+                    if (!exeExists)
+                    {
+                        DialogResult exeResult = MessageBox.Show("Executable can not be found - Continue anyway?", "Executable not found", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (exeResult != System.Windows.Forms.DialogResult.Yes)
+                            return;
+                    }
+
                     desktopFileA320.WriteDesktopFile(curPath);
-                    VerifyAndFixLineEndingsIfScript(Path.Combine(new string[] { curPath, desktopFileA320.Exec }));
+
+                    if (exeExists)
+                        VerifyAndFixLineEndingsIfScript(execPath);
                 }
                 else
                 {
@@ -382,7 +404,14 @@ namespace OpenPackageCreator
             }
 
             if (textBoxManual.Text != "")
-                VerifyAndFixLineEndings(Path.Combine(curPath, textBoxManual.Text));
+            {
+                try
+                {
+                    VerifyAndFixLineEndings(Path.Combine(curPath, textBoxManual.Text));
+                }
+                catch (Exception)
+                { }
+            }
 
             saveFileDialogOpk.InitialDirectory = Directory.GetParent(curPath).FullName;
 
