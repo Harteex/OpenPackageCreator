@@ -38,6 +38,8 @@ namespace OpenPackageCreator
             string descTerminal = "Terminal\n\nTell the menu to launch the app in a framebuffer console if enabled, e.g. for ncurses or regular stdout apps";
             string descManual = "Manual\n\nName of a text file that will be used as the manual of the app by the launcher";
             string descJoystickMode = "Use Joystick Mode\n\nJoystick Mode makes the system report joystick events instead of keyboard events for input";
+            string descGSensor = "Use GSensor\n\nBind the gravity sensor of the GCW Zero to a joystick device accessible alongside the joystick or keyboard";
+            string descHardwareScaling = "Enable Hardware Scaling\n\nEnable the hardware scaling of resolutions larger than 320x240 (up to 640x480)";
 
             ToolTip toolTip = new ToolTip();
             toolTip.AutoPopDelay = 32767;
@@ -57,6 +59,8 @@ namespace OpenPackageCreator
             toolTip.SetToolTip(this.infoTerminal, DoLineBreak(descTerminal, toolTipMaxLine));
             toolTip.SetToolTip(this.infoManual, DoLineBreak(descManual, toolTipMaxLine));
             toolTip.SetToolTip(this.infoJoystickMode, DoLineBreak(descJoystickMode, toolTipMaxLine));
+            toolTip.SetToolTip(this.infoGSensor, DoLineBreak(descGSensor, toolTipMaxLine));
+            toolTip.SetToolTip(this.infoHardwareScaling, DoLineBreak(descHardwareScaling, toolTipMaxLine));
 
             infoName.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descName, "Name", MessageBoxButtons.OK); });
             infoComment.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descComment, "Comment", MessageBoxButtons.OK); });
@@ -69,6 +73,8 @@ namespace OpenPackageCreator
             infoTerminal.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descTerminal, "Terminal", MessageBoxButtons.OK); });
             infoManual.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descManual, "Manual", MessageBoxButtons.OK); });
             infoJoystickMode.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descJoystickMode, "Use Joystick Mode", MessageBoxButtons.OK); });
+            infoGSensor.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descGSensor, "Use GSensor", MessageBoxButtons.OK); });
+            infoHardwareScaling.Click += new EventHandler(delegate(object sender, EventArgs e) { MessageBox.Show(descHardwareScaling, "Enable Hardware Scaling", MessageBoxButtons.OK); });
         }
 
         private string DoLineBreak(string text, int lineLength)
@@ -224,6 +230,8 @@ namespace OpenPackageCreator
                             checkBoxTerminal.Checked = desktopFileToUse.Terminal;
                             textBoxManual.Text = desktopFileToUse.Manual;
                             checkBoxJoystickMode.Checked = desktopFileToUse.JoystickMode;
+                            checkBoxGSensor.Checked = desktopFileToUse.GSensor;
+                            checkBoxHardwareScaling.Checked = desktopFileToUse.HardwareScaling;
                         }
                         
                         EnableFields(true);
@@ -323,6 +331,8 @@ namespace OpenPackageCreator
                     desktopFileGCW0.Terminal = checkBoxTerminal.Checked;
                     desktopFileGCW0.Manual = textBoxManual.Text;
                     desktopFileGCW0.JoystickMode = checkBoxJoystickMode.Checked;
+                    desktopFileGCW0.GSensor = checkBoxGSensor.Checked;
+                    desktopFileGCW0.HardwareScaling = checkBoxHardwareScaling.Checked;
                 }
 
                 if (desktopFileA320 != null)
@@ -338,6 +348,8 @@ namespace OpenPackageCreator
                     desktopFileA320.Terminal = checkBoxTerminal.Checked;
                     desktopFileA320.Manual = textBoxManual.Text;
                     desktopFileA320.JoystickMode = checkBoxJoystickMode.Checked;
+                    desktopFileA320.GSensor = checkBoxGSensor.Checked;
+                    desktopFileA320.HardwareScaling = checkBoxHardwareScaling.Checked;
                 }
 
                 if (desktopFileGCW0 != null && !desktopFileGCW0.VerifyData())
@@ -569,6 +581,8 @@ namespace OpenPackageCreator
             textBoxManual.Enabled = b;
             buttonManual.Enabled = b;
             checkBoxJoystickMode.Enabled = b;
+            checkBoxGSensor.Enabled = b;
+            checkBoxHardwareScaling.Enabled = b;
         }
 
         private void Reset()
@@ -587,6 +601,8 @@ namespace OpenPackageCreator
             checkBoxTerminal.Checked = false;
             textBoxManual.Text = "";
             checkBoxJoystickMode.Checked = false;
+            checkBoxGSensor.Checked = false;
+            checkBoxHardwareScaling.Checked = false;
 
             desktopFileOpt = DesktopFileOption.Ignore;
         }

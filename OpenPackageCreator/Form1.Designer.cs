@@ -30,8 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBoxConfig = new System.Windows.Forms.GroupBox();
+            this.checkBoxJoystickMode = new System.Windows.Forms.CheckBox();
             this.infoLaunchWithFile = new System.Windows.Forms.PictureBox();
             this.infoTerminal = new System.Windows.Forms.PictureBox();
+            this.infoJoystickMode = new System.Windows.Forms.PictureBox();
             this.infoManual = new System.Windows.Forms.PictureBox();
             this.buttonManual = new System.Windows.Forms.Button();
             this.textBoxManual = new System.Windows.Forms.TextBox();
@@ -83,11 +85,14 @@
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.webSiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBoxJoystickMode = new System.Windows.Forms.CheckBox();
-            this.infoJoystickMode = new System.Windows.Forms.PictureBox();
+            this.checkBoxGSensor = new System.Windows.Forms.CheckBox();
+            this.checkBoxHardwareScaling = new System.Windows.Forms.CheckBox();
+            this.infoGSensor = new System.Windows.Forms.PictureBox();
+            this.infoHardwareScaling = new System.Windows.Forms.PictureBox();
             this.groupBoxConfig.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoLaunchWithFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoTerminal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoJoystickMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoManual)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoMimeTypes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoIcon)).BeginInit();
@@ -98,13 +103,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.infoName)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.infoJoystickMode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoGSensor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoHardwareScaling)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxConfig
             // 
             this.groupBoxConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConfig.Controls.Add(this.infoHardwareScaling);
+            this.groupBoxConfig.Controls.Add(this.infoGSensor);
+            this.groupBoxConfig.Controls.Add(this.checkBoxHardwareScaling);
+            this.groupBoxConfig.Controls.Add(this.checkBoxGSensor);
             this.groupBoxConfig.Controls.Add(this.checkBoxJoystickMode);
             this.groupBoxConfig.Controls.Add(this.infoLaunchWithFile);
             this.groupBoxConfig.Controls.Add(this.infoTerminal);
@@ -145,10 +155,20 @@
             this.groupBoxConfig.Controls.Add(this.labelName);
             this.groupBoxConfig.Location = new System.Drawing.Point(12, 126);
             this.groupBoxConfig.Name = "groupBoxConfig";
-            this.groupBoxConfig.Size = new System.Drawing.Size(300, 339);
+            this.groupBoxConfig.Size = new System.Drawing.Size(300, 388);
             this.groupBoxConfig.TabIndex = 2;
             this.groupBoxConfig.TabStop = false;
             this.groupBoxConfig.Text = "Configure";
+            // 
+            // checkBoxJoystickMode
+            // 
+            this.checkBoxJoystickMode.AutoSize = true;
+            this.checkBoxJoystickMode.Location = new System.Drawing.Point(9, 312);
+            this.checkBoxJoystickMode.Name = "checkBoxJoystickMode";
+            this.checkBoxJoystickMode.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxJoystickMode.TabIndex = 30;
+            this.checkBoxJoystickMode.Text = "Use Joystick Mode";
+            this.checkBoxJoystickMode.UseVisualStyleBackColor = true;
             // 
             // infoLaunchWithFile
             // 
@@ -169,6 +189,16 @@
             this.infoTerminal.Size = new System.Drawing.Size(16, 16);
             this.infoTerminal.TabIndex = 28;
             this.infoTerminal.TabStop = false;
+            // 
+            // infoJoystickMode
+            // 
+            this.infoJoystickMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.infoJoystickMode.Image = global::OpenPackageCreator.Properties.Resources.info;
+            this.infoJoystickMode.Location = new System.Drawing.Point(276, 312);
+            this.infoJoystickMode.Name = "infoJoystickMode";
+            this.infoJoystickMode.Size = new System.Drawing.Size(16, 16);
+            this.infoJoystickMode.TabIndex = 27;
+            this.infoJoystickMode.TabStop = false;
             // 
             // infoManual
             // 
@@ -546,7 +576,7 @@
             // buttonPack
             // 
             this.buttonPack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonPack.Location = new System.Drawing.Point(77, 482);
+            this.buttonPack.Location = new System.Drawing.Point(77, 528);
             this.buttonPack.Name = "buttonPack";
             this.buttonPack.Size = new System.Drawing.Size(75, 23);
             this.buttonPack.TabIndex = 16;
@@ -557,7 +587,7 @@
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReset.Location = new System.Drawing.Point(158, 482);
+            this.buttonReset.Location = new System.Drawing.Point(158, 528);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(75, 23);
             this.buttonReset.TabIndex = 17;
@@ -639,32 +669,52 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // checkBoxJoystickMode
+            // checkBoxGSensor
             // 
-            this.checkBoxJoystickMode.AutoSize = true;
-            this.checkBoxJoystickMode.Location = new System.Drawing.Point(9, 312);
-            this.checkBoxJoystickMode.Name = "checkBoxJoystickMode";
-            this.checkBoxJoystickMode.Size = new System.Drawing.Size(116, 17);
-            this.checkBoxJoystickMode.TabIndex = 30;
-            this.checkBoxJoystickMode.Text = "Use Joystick Mode";
-            this.checkBoxJoystickMode.UseVisualStyleBackColor = true;
+            this.checkBoxGSensor.AutoSize = true;
+            this.checkBoxGSensor.Location = new System.Drawing.Point(9, 335);
+            this.checkBoxGSensor.Name = "checkBoxGSensor";
+            this.checkBoxGSensor.Size = new System.Drawing.Size(89, 17);
+            this.checkBoxGSensor.TabIndex = 31;
+            this.checkBoxGSensor.Text = "Use GSensor";
+            this.checkBoxGSensor.UseVisualStyleBackColor = true;
             // 
-            // infoJoystickMode
+            // checkBoxHardwareScaling
             // 
-            this.infoJoystickMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.infoJoystickMode.Image = global::OpenPackageCreator.Properties.Resources.info;
-            this.infoJoystickMode.Location = new System.Drawing.Point(276, 312);
-            this.infoJoystickMode.Name = "infoJoystickMode";
-            this.infoJoystickMode.Size = new System.Drawing.Size(16, 16);
-            this.infoJoystickMode.TabIndex = 27;
-            this.infoJoystickMode.TabStop = false;
+            this.checkBoxHardwareScaling.AutoSize = true;
+            this.checkBoxHardwareScaling.Location = new System.Drawing.Point(9, 358);
+            this.checkBoxHardwareScaling.Name = "checkBoxHardwareScaling";
+            this.checkBoxHardwareScaling.Size = new System.Drawing.Size(146, 17);
+            this.checkBoxHardwareScaling.TabIndex = 32;
+            this.checkBoxHardwareScaling.Text = "Enable Hardware Scaling";
+            this.checkBoxHardwareScaling.UseVisualStyleBackColor = true;
+            // 
+            // infoGSensor
+            // 
+            this.infoGSensor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.infoGSensor.Image = global::OpenPackageCreator.Properties.Resources.info;
+            this.infoGSensor.Location = new System.Drawing.Point(276, 335);
+            this.infoGSensor.Name = "infoGSensor";
+            this.infoGSensor.Size = new System.Drawing.Size(16, 16);
+            this.infoGSensor.TabIndex = 33;
+            this.infoGSensor.TabStop = false;
+            // 
+            // infoHardwareScaling
+            // 
+            this.infoHardwareScaling.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.infoHardwareScaling.Image = global::OpenPackageCreator.Properties.Resources.info;
+            this.infoHardwareScaling.Location = new System.Drawing.Point(276, 358);
+            this.infoHardwareScaling.Name = "infoHardwareScaling";
+            this.infoHardwareScaling.Size = new System.Drawing.Size(16, 16);
+            this.infoHardwareScaling.TabIndex = 34;
+            this.infoHardwareScaling.TabStop = false;
             // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(324, 521);
+            this.ClientSize = new System.Drawing.Size(324, 567);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonPack);
             this.Controls.Add(this.groupBoxConfig);
@@ -680,6 +730,7 @@
             this.groupBoxConfig.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoLaunchWithFile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoTerminal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoJoystickMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoManual)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoMimeTypes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoIcon)).EndInit();
@@ -692,7 +743,8 @@
             this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.infoJoystickMode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoGSensor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoHardwareScaling)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -756,6 +808,10 @@
         private System.Windows.Forms.ToolStripMenuItem webSiteToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxJoystickMode;
         private System.Windows.Forms.PictureBox infoJoystickMode;
+        private System.Windows.Forms.PictureBox infoHardwareScaling;
+        private System.Windows.Forms.PictureBox infoGSensor;
+        private System.Windows.Forms.CheckBox checkBoxHardwareScaling;
+        private System.Windows.Forms.CheckBox checkBoxGSensor;
     }
 }
 

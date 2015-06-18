@@ -20,6 +20,8 @@ namespace OpenPackageCreator
         private string categories = "";
         private string mimeTypes = "";
         private bool joystickMode = false;
+        private bool gSensor = false;
+        private bool hardwareScaling = false;
 
         private bool withFile = false;
 
@@ -106,6 +108,18 @@ namespace OpenPackageCreator
         {
             get { return joystickMode; }
             set { joystickMode = value; }
+        }
+
+        public bool GSensor
+        {
+            get { return gSensor; }
+            set { gSensor = value; }
+        }
+
+        public bool HardwareScaling
+        {
+            get { return hardwareScaling; }
+            set { hardwareScaling = value; }
         }
 
         private string GetFilename()
@@ -233,6 +247,16 @@ namespace OpenPackageCreator
                 file.Write("X-OD-NeedsJoystick=true\n");
             }
 
+            if (gSensor)
+            {
+                file.Write("X-OD-NeedsGSensor=true\n");
+            }
+
+            if (hardwareScaling)
+            {
+                file.Write("X-OD-NeedsDownscaling=true\n");
+            }
+
             file.Close();
             file.Dispose();
 
@@ -303,6 +327,12 @@ namespace OpenPackageCreator
                         case "x-od-needsjoystick":
                             joystickMode = value.ToLower() == "true";
                             break;
+                        case "x-od-needsgsensor":
+                            gSensor = value.ToLower() == "true";
+                            break;
+                        case "x-od-needsdownscaling":
+                            hardwareScaling = value.ToLower() == "true";
+                            break;
                     }
                 }
 
@@ -348,7 +378,13 @@ namespace OpenPackageCreator
             if (manual != other.Manual)
                 return false;
 
-            if (joystickMode != other.joystickMode)
+            if (joystickMode != other.JoystickMode)
+                return false;
+
+            if (gSensor != other.GSensor)
+                return false;
+
+            if (hardwareScaling != other.HardwareScaling)
                 return false;
 
             return true;
