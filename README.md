@@ -7,7 +7,7 @@ Primarily for Windows, but also runs just fine for Linux with Mono
 
 Windows
 * .NET Redistributable
-* Patched squashfs-tools
+* Patched squashfs-tools (included with the release)
 
 Linux
 * Mono
