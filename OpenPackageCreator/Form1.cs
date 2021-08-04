@@ -16,6 +16,7 @@ namespace OpenPackageCreator
     {
         private string curPath = "";
         private DesktopFileOption desktopFileOpt = DesktopFileOption.Ignore;
+        private Dictionary<string, string> additionalFields = new Dictionary<string, string>();
 
         public Form1()
         {
@@ -232,6 +233,7 @@ namespace OpenPackageCreator
                             checkBoxJoystickMode.Checked = desktopFileToUse.JoystickMode;
                             checkBoxGSensor.Checked = desktopFileToUse.GSensor;
                             checkBoxHardwareScaling.Checked = desktopFileToUse.HardwareScaling;
+                            additionalFields = desktopFileToUse.AdditionalFields;
                         }
                         
                         EnableFields(true);
@@ -333,6 +335,7 @@ namespace OpenPackageCreator
                     desktopFileGCW0.JoystickMode = checkBoxJoystickMode.Checked;
                     desktopFileGCW0.GSensor = checkBoxGSensor.Checked;
                     desktopFileGCW0.HardwareScaling = checkBoxHardwareScaling.Checked;
+                    desktopFileGCW0.AdditionalFields = additionalFields;
                 }
 
                 if (desktopFileA320 != null)
@@ -350,6 +353,7 @@ namespace OpenPackageCreator
                     desktopFileA320.JoystickMode = checkBoxJoystickMode.Checked;
                     desktopFileA320.GSensor = checkBoxGSensor.Checked;
                     desktopFileA320.HardwareScaling = checkBoxHardwareScaling.Checked;
+                    desktopFileA320.AdditionalFields = additionalFields;
                 }
 
                 if (desktopFileGCW0 != null && !desktopFileGCW0.VerifyData())
@@ -603,6 +607,7 @@ namespace OpenPackageCreator
             checkBoxJoystickMode.Checked = false;
             checkBoxGSensor.Checked = false;
             checkBoxHardwareScaling.Checked = false;
+            additionalFields.Clear();
 
             desktopFileOpt = DesktopFileOption.Ignore;
         }

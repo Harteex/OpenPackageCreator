@@ -25,6 +25,8 @@ namespace OpenPackageCreator
 
         private bool withFile = false;
 
+        private Dictionary<string, string> additionalFields = new Dictionary<string, string>();
+
         private string lastError = "No error";
 
         public DesktopFile()
@@ -131,6 +133,12 @@ namespace OpenPackageCreator
         {
             get { return withFile; }
             set { withFile = value; }
+        }
+
+        public Dictionary<string, string> AdditionalFields
+        {
+            get { return additionalFields; }
+            set { additionalFields = value; }
         }
 
         public string LastError
@@ -257,6 +265,11 @@ namespace OpenPackageCreator
                 file.Write("X-OD-NeedsDownscaling=true\n");
             }
 
+            foreach (var item in additionalFields)
+            {
+                file.Write($"{item.Key}={item.Value}\n");
+            }
+
             file.Close();
             file.Dispose();
 
@@ -284,16 +297,18 @@ namespace OpenPackageCreator
                     return false;
                 }
 
+                additionalFields.Clear();
+
                 while ((line = file.ReadLine()) != null)
                 {
                     string[] split = line.Split(new char[] { '=' }, 2);
                     if (split.Length != 2)
                         continue;
 
-                    string key = split[0].Trim().ToLower();
+                    string key = split[0].Trim();
                     string value = split[1].Trim();
 
-                    switch (key)
+                    switch (key.ToLower())
                     {
                         case "name":
                             name = value;
@@ -332,6 +347,9 @@ namespace OpenPackageCreator
                             break;
                         case "x-od-needsdownscaling":
                             hardwareScaling = value.ToLower() == "true";
+                            break;
+                        default:
+                            additionalFields.Add(key, value);
                             break;
                     }
                 }
