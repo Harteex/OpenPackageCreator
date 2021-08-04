@@ -1,3 +1,6 @@
+1.1.3
+* Retain arbitrary fields when loading information from an existing desktop file. These fields are not visible but will be saved when recreating the opk.
+
 1.1.2
 * Added support for X-OD-NeedsGSensor and X-OD-NeedsDownscaling
 * Fixed a bug with using desktop files as is and then trying to pack
